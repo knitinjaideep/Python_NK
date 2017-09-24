@@ -21,7 +21,7 @@ f_o = open ("D:/pyt/pyt data/Scrape_WV_sample_finditer.txt", "w")
 s_o = open ("D:/pyt/pyt data/WebScrape_data.txt","r")
 s = s_o.read()
 j = 0
-#Regular expression for for taking class as a subset
+#Regular expression for taking class as a subset
 classes = re.finditer(r'clsObj\[\'class\'\](.*?)clsObj = {};', f, re.S)
 
 for match in classes: 
