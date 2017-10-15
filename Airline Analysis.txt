@@ -1,0 +1,98 @@
+************************************************
+Project Name: Airline Analysis
+Name: Nitin Kotcherlakota
+************************************************
+
+Table creation:
+------------------------------------------------
+1. finalairlines:
+------------------------------------------------
+create table finalairlines 
+(
+airline_id int,airline string, name string, alias string, iata string, iaco string, callsign string, country string, active string
+) 
+row format delimited fields terminated by ',';
+------------------------------------------------
+2. airport:
+------------------------------------------------
+create table airport 
+(
+airport_id string,name string, city string, country string, iata_faa string, iaco string, latitude string, longitude string, altitude string, timezone string, dst string, tz string
+) 
+row format delimited fields terminated by ',';
+------------------------------------------------
+3. routes:
+------------------------------------------------
+create table airport 
+(
+airlines string,airline_id int, source_airport string, source_airpot_id int, destination_airport string, destination_airport_id int, code_share string, stops int, equipment string
+) 
+row format delimited fields terminated by ',';
+
+------------------------------------------------
+Analysis
+------------------------------------------------
+Q1: Find the list of Airports operating in Country India?
+A: select airport_id, name from airports where country == 'India';
+
+Q2: Find the list of airlines having 0 stops?
+A: 
+For airline id and name: select airline_id, airlines from routes where stop == 0;
+For all the data: select * from routes where stop == 0;
+
+Q3: List of Airlines operating with code share?
+A:select * from routes where code_share == 'Y'
+
+Q4: Which country (or) territory having highest Airports?
+A: 
+Step 1: creating a table with country and number of airports:
+A: create table totairports as select country, count(airport_id) as count1 from airport group country;
+Step 2: select the country with maximum count:
+A: select country, max(count1) as maxair from totairports group by country order by maxair desc limit 1;
+
+Q5: Find the list of Active Airlines in United States?
+A:select airline,name from finalairlines where active == 'Y'
+
+Q6: Fins the list of airlines whose source is nyc and destination is chicago? Also find the alias name of the airlines?
+A: select c.airline,c.alias,d.source_airport,d.destination_airport from finalairlines c join routes d on c.airline_id = d.airline_id
+and d.source_airport = 'nyc' and d.destination_airport = 'chicago'
+
+dataset descriptions:
+
+describe finalairlines;
+
+airline_id  int
+airline 	string
+name		string
+alias		string
+iata		string
+iaco 		string
+callsign	string	
+country		string
+active		string
+
+describe airport;
+
+airport_id	string
+name		string
+city		string
+country		string
+iata_faa	string
+icao		string
+latitude	string
+longitude	string
+altitude	string
+timezone	string
+dst		string
+tz		string
+
+describe routes;
+airlines	string
+airline_id	int
+source_airport	string
+source_airpot_id string
+destination_airport	string
+destination_airport_id  string
+code_share 	string
+stops		string
+equipment	string

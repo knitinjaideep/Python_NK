@@ -8,6 +8,7 @@ Created on Sun Sep 24 10:28:03 2017
 #matplotlib_histograms
 import matplotlib.pyplot as plt
 
+
 test_scores = [45,50,55,60,54,70,86,90,91,73,88,76,90,98,64,100]
 x = [x for x in range(len(test_scores))]
 

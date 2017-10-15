@@ -1,0 +1,43 @@
+************************************************
+Project Name: Youtube Analysis
+Name: Nitin Kotcherlakota
+************************************************
+
+Table creation:
+------------------------------------------------
+1. ydata:
+------------------------------------------------
+create table ydata 
+(
+video_id int,uploader string, interval int, category string, length string, NoOfViews int, rating float, NoOfRatings int,NoOfComments int
+) 
+row format delimited fields terminated by ',';
+
+------------------------------------------------
+2. create parition table ydatapartition
+------------------------------------------------
+
+create table ydatapartition
+(video_id int,uploader string, interval int, length string, NoOfViews int, rating float, NoOfRatings int,NoOfComments int) 
+partitioned by (category string)
+------------------------------------------------
+Loading data into HDFS
+------------------------------------------------
+load data local inpath '/home/edureka/Downloads/Youtube_data.txt' into ydata;
+
+------------------------------------------------
+Partitioning based on category
+------------------------------------------------
+insert into table ydatapartition partition(category)
+select video_id, uploader, interval, length, NoOfViews, rating, NoOfRatings,NoOfComments,category from ydata;
+------------------------------------------------
+Analysis
+------------------------------------------------
+Q1: Find out the top 5 categories with maximum number of videos uploaded?
+A: select category,count(category) as cnt_category from ydatapartition group by category order by cnt_category desc limit 5;
+
+Q2: Find out the top 10 rated videos?
+A: select video_id, rating from ydatapartition order by rating desc limit 10
+
+Q3: Find out the most viewed videos?
+A: select video_id,NoOfViews from ydatapartition order by created

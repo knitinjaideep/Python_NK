@@ -1,0 +1,47 @@
+**********************************************
+creating table data in default database
+**********************************************
+
+create table data
+(
+year string,quarter string,month string, fl_date string,airline_id string,carrier string,fl_number string,origin_airport_id string,
+origin string,origin_city_name string,origin_state_abbr string,origin_state_nm string,dest_airport_id string,Dest string, 
+dest_city_name string, desdep_time string,arr_time string, cancelled float, air_time float,flights float,distance float
+) 
+row format serde 'com.bizo.hive.serde.csv.CSVSerde'
+WITH SERDEPROPERTIES (
+   "separatorChar" = ",",
+   "quoteChar"     = '"',
+   "escapeChar"    = "\\"
+)  
+STORED AS TEXTFILE
+tblproperties("skip.header.line.count"="1");
+
+**********************************************
+creating table partitiondata
+**********************************************
+
+create table partitiondata 
+(
+quarter string, fl_date string,airline_id string,carrier string,fl_number string,origin_airport_id string,
+origin string,origin_city_name string,origin_state_nm string,dest_airport_id string,Dest string, 
+dest_city_name string, desdep_time string,arr_time string, cancelled float, air_time float,flights float,distance float
+)
+partitioned by (year string,month string,origin_state_abbr string)  
+
+**********************************************
+Loading data into partition table
+**********************************************
+load data local inpath '/home/edureka/Downloads/Jan.csv' into table partitiondata partition (year = 2017, month = 1, origin_state_abbr = 'CA') 
+
+**********************************************
+Overwriting partitiondata
+**********************************************
+insert overwrite table partitiondata partition (year,month,origin_state_abbr)
+select quarter, fl_date,airline_id,carrier,fl_number,origin_airport_id,origin,origin_city_name,origin_state_nm string,dest_airport_id,Dest,dest_city_name,desdep_time,arr_time, cancelled, air_time,flights,distance,year, month,origin_state_abbr from data;
+
+load data local inpath '/home/edureka/Downloads/jan.csv' 
+
+load data local inpath '/home/edureka/Downloads/Feb.csv' into table data;
+
+
